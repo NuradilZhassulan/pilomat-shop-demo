@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ЛесТорг — пиломатериалы от производителя</title>
+<meta name="description" content="Пиломатериалы от производителя: доска обрезная, брус, вагонка. Расчёт объёма и цены по м³, распил в размер, доставка.">
+<style>
+  :root{
+    --wood:#8a5a2b; --wood-d:#6b4420; --cream:#faf6ef; --ink:#2b2320;
+    --line:#e7ddce; --green:#3c7a4a; --card:#fff; --muted:#7a6f63;
+    --shadow:0 6px 24px rgba(60,40,20,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--cream);line-height:1.5}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 20px}
+  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--wood);color:#fff;border:0;padding:12px 20px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:.15s}
+  .btn:hover{background:var(--wood-d)}
+  .btn.ghost{background:transparent;color:var(--wood);border:1.5px solid var(--wood)}
+  .btn.ghost:hover{background:var(--wood);color:#fff}
+  /* header */
+  header{position:sticky;top:0;background:rgba(250,246,239,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:40}
+  .bar{display:flex;align-items:center;gap:24px;height:66px}
+  .logo{font-size:21px;font-weight:800;letter-spacing:-.5px;display:flex;align-items:center;gap:9px}
+  .logo .mk{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--wood),var(--wood-d));display:grid;place-items:center;color:#fff;font-size:16px}
+  nav.menu{display:flex;gap:22px;margin-left:12px;font-size:15px;color:#4b4038}
+  nav.menu a:hover{color:var(--wood)}
+  .bar .right{margin-left:auto;display:flex;align-items:center;gap:16px}
+  .phone{font-weight:700;font-size:16px;white-space:nowrap}
+  .phone small{display:block;font-weight:400;font-size:11px;color:var(--muted)}
+  .cartbtn{position:relative;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:600;font-size:14px}
+  .cartbtn .cnt{position:absolute;top:-8px;right:-8px;background:var(--green);color:#fff;font-size:11px;min-width:20px;height:20px;border-radius:10px;display:grid;place-items:center;padding:0 5px}
+  /* hero */
+  .hero{padding:56px 0 40px;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+  .hero h1{font-size:44px;line-height:1.08;letter-spacing:-1px;margin-bottom:16px}
+  .hero p.sub{font-size:18px;color:#5a4f45;margin-bottom:24px;max-width:520px}
+  .hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .trust{display:flex;gap:26px;margin-top:30px;flex-wrap:wrap}
+  .trust div{font-size:14px;color:#4b4038}
+  .trust b{display:block;font-size:22px;color:var(--wood-d)}
+  .heroart{background:linear-gradient(160deg,#b07d43,#7c4f24);border-radius:20px;min-height:320px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .heroart .planks{position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.06) 0 26px,rgba(0,0,0,.06) 26px 52px)}
+  .heroart .tag{position:absolute;left:22px;bottom:22px;background:rgba(255,255,255,.95);border-radius:12px;padding:14px 18px;font-size:14px;box-shadow:var(--shadow)}
+  .heroart .tag b{color:var(--wood-d)}
+  /* sections */
+  section{padding:46px 0}
+  .h2{font-size:30px;letter-spacing:-.5px;margin-bottom:6px}
+  .lead{color:var(--muted);margin-bottom:26px;font-size:16px}
+  /* calculator */
+  .calc{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:26px;display:grid;grid-template-columns:1fr 300px;gap:26px}
+  .calc h3{font-size:20px;margin-bottom:4px}
+  .calc .fields{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field.full{grid-column:1/3}
+  label{font-size:13px;color:#5a4f45;font-weight:600}
+  select,input{font:inherit;padding:11px 12px;border:1.5px solid var(--line);border-radius:9px;background:#fff}
+  select:focus,input:focus{outline:none;border-color:var(--wood)}
+  .result{background:linear-gradient(160deg,#f6ecdd,#efe0c9);border-radius:14px;padding:22px;display:flex;flex-direction:column;justify-content:center}
+  .result .row{display:flex;justify-content:space-between;padding:7px 0;font-size:15px;color:#5a4f45}
+  .result .vol{font-size:15px}
+  .result .total{font-size:34px;font-weight:800;color:var(--wood-d);margin:8px 0 4px}
+  .result small{color:var(--muted);font-size:12px}
+  .result .btn{margin-top:16px;justify-content:center}
+  /* catalog */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .prod{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+  .prod .ph{height:150px;background:linear-gradient(160deg,#c99a5f,#9a6a34);position:relative}
+  .prod .ph .planks{position:absolute;inset:0;background:repeating-linear-gradient(100deg,rgba(255,255,255,.07) 0 18px,rgba(0,0,0,.05) 18px 36px)}
+  .prod .ph .badge{position:absolute;top:12px;left:12px;background:rgba(255,255,255,.94);color:var(--wood-d);font-size:12px;font-weight:700;padding:5px 10px;border-radius:20px}
+  .prod .body{padding:16px 16px 18px;display:flex;flex-direction:column;flex:1}
+  .prod h4{font-size:17px;margin-bottom:4px}
+  .prod .desc{font-size:13px;color:var(--muted);margin-bottom:12px;flex:1}
+  .prod .price{font-size:20px;font-weight:800;color:var(--wood-d)}
+  .prod .price small{font-size:13px;font-weight:500;color:var(--muted)}
+  .prod .add{margin-top:12px}
+  .prod .add .btn{width:100%;justify-content:center}
+  /* features */
+  .feats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .feat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .feat .ic{font-size:24px;margin-bottom:10px}
+  .feat h4{font-size:16px;margin-bottom:5px}
+  .feat p{font-size:13px;color:var(--muted)}
+  /* cta band */
+  .band{background:linear-gradient(135deg,var(--wood),var(--wood-d));color:#fff;border-radius:20px;padding:38px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  .band h3{font-size:26px;margin-bottom:6px}
+  .band p{opacity:.9}
+  .band .btn{background:#fff;color:var(--wood-d)}
+  /* footer */
+  footer{border-top:1px solid var(--line);padding:34px 0;margin-top:20px;color:#5a4f45;font-size:14px}
+  .fgrid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:24px}
+  .fgrid b{display:block;margin-bottom:8px;color:var(--ink)}
+  .fgrid a{display:block;padding:3px 0;color:#5a4f45}
+  .demo-note{background:#2b2320;color:#f0e6d6;text-align:center;font-size:13px;padding:9px}
+  /* cart drawer */
+  .overlay{position:fixed;inset:0;background:rgba(30,20,10,.45);opacity:0;pointer-events:none;transition:.2s;z-index:60}
+  .overlay.open{opacity:1;pointer-events:auto}
+  .drawer{position:fixed;top:0;right:-420px;width:400px;max-width:92vw;height:100%;background:#fff;box-shadow:-10px 0 40px rgba(0,0,0,.2);transition:.25s;z-index:70;display:flex;flex-direction:column}
+  .drawer.open{right:0}
+  .drawer .dh{padding:20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  .drawer .dh h3{font-size:19px}
+  .drawer .items{flex:1;overflow:auto;padding:12px 20px}
+  .ci{display:flex;justify-content:space-between;gap:10px;padding:14px 0;border-bottom:1px solid var(--line)}
+  .ci .t{font-size:14px}
+  .ci .t small{display:block;color:var(--muted);font-size:12px}
+  .ci .rm{color:#b34b3a;cursor:pointer;font-size:13px;background:none;border:0}
+  .empty{color:var(--muted);text-align:center;padding:40px 0;font-size:14px}
+  .drawer .df{padding:20px;border-top:1px solid var(--line)}
+  .drawer .df .tot{display:flex;justify-content:space-between;font-size:18px;font-weight:800;margin-bottom:14px}
+  .drawer .df input{width:100%;margin-bottom:10px}
+  .drawer .df .btn{width:100%;justify-content:center}
+  .x{background:none;border:0;font-size:24px;cursor:pointer;color:var(--muted);line-height:1}
+  @media(max-width:900px){
+    .hero{grid-template-columns:1fr;padding-top:34px}.hero h1{font-size:34px}
+    .calc{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}
+    .feats{grid-template-columns:repeat(2,1fr)}.fgrid{grid-template-columns:1fr}
+    nav.menu,.phone small{display:none}
+  }
+  @media(max-width:560px){.grid{grid-template-columns:1fr}.feats{grid-template-columns:1fr}.calc .fields{grid-template-columns:1fr}.field.full{grid-column:1}.hero h1{font-size:29px}}
+</style>
+</head>
+<body>
+<div class="demo-note">Демо-прототип интернет-магазина пиломатериалов · собран для отклика на задачу</div>
+<header>
+  <div class="wrap bar">
+    <div class="logo"><span class="mk">🪵</span>ЛесТорг</div>
+    <nav class="menu">
+      <a href="#calc">Калькулятор</a>
+      <a href="#catalog">Каталог</a>
+      <a href="#feats">Доставка</a>
+      <a href="#about">О производстве</a>
+    </nav>
+    <div class="right">
+      <div class="phone">+7 900 000-00-00<small>звонок по России бесплатный</small></div>
+      <button class="cartbtn" onclick="openCart()">Заявка <span class="cnt" id="cnt">0</span></button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <h1>Пиломатериалы<br>от производителя</h1>
+      <p class="sub">Доска, брус, вагонка и погонаж с собственной пилорамы. Рассчитайте объём и цену за минуту, закажите распил в размер и доставку по региону.</p>
+      <div class="cta">
+        <a href="#calc" class="btn">Рассчитать стоимость</a>
+        <a href="#catalog" class="btn ghost">Смотреть каталог</a>
+      </div>
+      <div class="trust">
+        <div><b>12 лет</b>на рынке</div>
+        <div><b>ГОСТ</b>камерная сушка</div>
+        <div><b>от 1 м³</b>распил в размер</div>
+      </div>
+    </div>
+    <div class="heroart"><div class="planks"></div>
+      <div class="tag">Сегодня со склада: <b>обрезная доска 25×150×6000</b> — 11 500 ₽/м³</div>
+    </div>
+  </section>
+</div>
+
+<!-- CALCULATOR -->
+<div class="wrap">
+  <section id="calc">
+    <h2 class="h2">Калькулятор объёма и цены</h2>
+    <p class="lead">Пиломатериалы считаются в кубометрах — укажите размеры и количество, и мы сразу покажем объём и стоимость.</p>
+    <div class="calc">
+      <div>
+        <h3>Параметры материала</h3>
+        <div class="fields">
+          <div class="field full">
+            <label>Материал</label>
+            <select id="c_mat" onchange="calc()"></select>
+          </div>
+          <div class="field"><label>Толщина, мм</label><input id="c_t" type="number" value="25" min="1" oninput="calc()"></div>
+          <div class="field"><label>Ширина, мм</label><input id="c_w" type="number" value="150" min="1" oninput="calc()"></div>
+          <div class="field"><label>Длина, мм</label><input id="c_l" type="number" value="6000" min="1" oninput="calc()"></div>
+          <div class="field"><label>Количество, шт</label><input id="c_q" type="number" value="50" min="1" oninput="calc()"></div>
+        </div>
+      </div>
+      <div class="result">
+        <div class="row vol"><span>Объём одной штуки</span><b id="r_one">—</b></div>
+        <div class="row vol"><span>Общий объём</span><b id="r_vol">—</b></div>
+        <div class="row"><span>Цена за м³</span><b id="r_ppm">—</b></div>
+        <div class="total" id="r_total">—</div>
+        <small id="r_note">Ориентировочный расчёт по прайсу склада</small>
+        <button class="btn" onclick="addCalc()">Добавить в заявку</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- CATALOG -->
+<div class="wrap">
+  <section id="catalog">
+    <h2 class="h2">Каталог</h2>
+    <p class="lead">Цены указаны за кубический метр. Нажмите «В заявку» — соберём и посчитаем всё вместе.</p>
+    <div class="grid" id="grid"></div>
+  </section>
+</div>
+
+<!-- FEATURES -->
+<div class="wrap">
+  <section id="feats">
+    <h2 class="h2">Как мы работаем</h2>
+    <p class="lead">От производства до вашего объекта — без посредников.</p>
+    <div class="feats">
+      <div class="feat"><div class="ic">🏭</div><h4>Своё производство</h4><p>Пилорама и сушильные камеры — контролируем качество и держим цену ниже рынка.</p></div>
+      <div class="feat"><div class="ic">📐</div><h4>Распил в размер</h4><p>Нарежем по вашим размерам под конкретный проект, без переплаты за лишнее.</p></div>
+      <div class="feat"><div class="ic">🚚</div><h4>Доставка</h4><p>Манипулятор и фуры по региону, разгрузка на объекте. Расчёт по адресу.</p></div>
+      <div class="feat"><div class="ic">📄</div><h4>Для юрлиц</h4><p>Работаем с НДС и без, отгрузка по договору, отсрочка для постоянных клиентов.</p></div>
+    </div>
+  </section>
+</div>
+
+<!-- CTA BAND -->
+<div class="wrap">
+  <section id="about">
+    <div class="band">
+      <div>
+        <h3>Нужен объём под проект?</h3>
+        <p>Пришлите спецификацию — вернём смету с распилом и доставкой в течение дня.</p>
+      </div>
+      <button class="btn" onclick="openCart()">Оставить заявку</button>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap fgrid">
+    <div>
+      <div class="logo" style="margin-bottom:10px"><span class="mk">🪵</span>ЛесТорг</div>
+      <p style="color:var(--muted);max-width:320px">Производство и продажа пиломатериалов. Демонстрационный прототип магазина, подготовленный к отклику на бирже.</p>
+    </div>
+    <div><b>Каталог</b><a href="#catalog">Доска обрезная</a><a href="#catalog">Брус</a><a href="#catalog">Вагонка</a><a href="#catalog">Погонаж</a></div>
+    <div><b>Контакты</b><a href="#">+7 900 000-00-00</a><a href="#">zakaz@lestorg.demo</a><a href="#">Пн–Сб, 8:00–18:00</a></div>
+  </div>
+</footer>
+
+<!-- CART -->
+<div class="overlay" id="ov" onclick="closeCart()"></div>
+<div class="drawer" id="dw">
+  <div class="dh"><h3>Ваша заявка</h3><button class="x" onclick="closeCart()">×</button></div>
+  <div class="items" id="items"></div>
+  <div class="df">
+    <div class="tot"><span>Итого</span><span id="tot">0 ₽</span></div>
+    <input id="f_name" placeholder="Ваше имя">
+    <input id="f_phone" placeholder="Телефон">
+    <button class="btn" onclick="submitOrder()">Отправить заявку</button>
+  </div>
+</div>
+
+<script>
+const PRODUCTS = [
+  {id:'doska', name:'Доска обрезная', badge:'Хит', desc:'Ель/сосна, естественной влажности. 25–50 мм.', ppm:11500},
+  {id:'brus', name:'Брус профилированный', badge:'Сушка', desc:'Профилированный брус камерной сушки для стен.', ppm:16800},
+  {id:'brusok', name:'Брусок строганый', badge:'', desc:'Для обрешётки, стропил и каркаса.', ppm:14200},
+  {id:'vagonka', name:'Вагонка «Штиль»', badge:'Сорт AB', desc:'Профиль штиль, для внутренней отделки.', ppm:19900},
+  {id:'imitaciya', name:'Имитация бруса', badge:'', desc:'Фасад и интерьер под массивный брус.', ppm:21500},
+  {id:'polovaya', name:'Доска пола шпунтованная', badge:'', desc:'Шпунт, камерная сушка, сорт A.', ppm:24800},
+];
+let cart = [];
+
+// fill material select + catalog
+const sel = document.getElementById('c_mat');
+PRODUCTS.forEach(p=>{ const o=document.createElement('option'); o.value=p.id; o.textContent=p.name+' — '+p.ppm.toLocaleString('ru')+' ₽/м³'; sel.appendChild(o); });
+const grid = document.getElementById('grid');
+PRODUCTS.forEach(p=>{
+  const el=document.createElement('div'); el.className='prod';
+  el.innerHTML=`<div class="ph"><div class="planks"></div>${p.badge?`<span class="badge">${p.badge}</span>`:''}</div>
+  <div class="body"><h4>${p.name}</h4><div class="desc">${p.desc}</div>
+  <div class="price">${p.ppm.toLocaleString('ru')} ₽ <small>/ м³</small></div>
+  <div class="add"><button class="btn" onclick="addProduct('${p.id}')">В заявку</button></div></div>`;
+  grid.appendChild(el);
+});
+
+function fmt(n){ return Math.round(n).toLocaleString('ru')+' ₽'; }
+function volOne(){ const t=+c_t.value, w=+c_w.value, l=+c_l.value; return (t/1000)*(w/1000)*(l/1000); }
+function calc(){
+  const p=PRODUCTS.find(x=>x.id===sel.value); const q=+c_q.value||0;
+  const one=volOne(); const vol=one*q; const total=vol*p.ppm;
+  r_one.textContent=one.toFixed(4)+' м³';
+  r_vol.textContent=vol.toFixed(3)+' м³';
+  r_ppm.textContent=p.ppm.toLocaleString('ru')+' ₽';
+  r_total.textContent=fmt(total);
+}
+function addCalc(){
+  const p=PRODUCTS.find(x=>x.id===sel.value); const q=+c_q.value||0; const vol=volOne()*q;
+  cart.push({name:p.name, meta:`${c_t.value}×${c_w.value}×${c_l.value} мм · ${q} шт · ${vol.toFixed(3)} м³`, sum:vol*p.ppm});
+  render(); openCart();
+}
+function addProduct(id){
+  const p=PRODUCTS.find(x=>x.id===id);
+  cart.push({name:p.name, meta:'1 м³ · уточним размеры при заказе', sum:p.ppm});
+  render(); openCart();
+}
+function render(){
+  cnt.textContent=cart.length;
+  const box=document.getElementById('items');
+  if(!cart.length){ box.innerHTML='<div class="empty">Заявка пуста.<br>Добавьте позиции из каталога или калькулятора.</div>'; }
+  else{ box.innerHTML=cart.map((c,i)=>`<div class="ci"><div class="t">${c.name}<small>${c.meta}</small></div>
+    <div style="text-align:right"><b>${fmt(c.sum)}</b><br><button class="rm" onclick="rm(${i})">убрать</button></div></div>`).join(''); }
+  tot.textContent=fmt(cart.reduce((s,c)=>s+c.sum,0));
+}
+function rm(i){ cart.splice(i,1); render(); }
+function openCart(){ ov.classList.add('open'); dw.classList.add('open'); }
+function closeCart(){ ov.classList.remove('open'); dw.classList.remove('open'); }
+function submitOrder(){
+  if(!cart.length){ alert('Добавьте хотя бы одну позицию.'); return; }
+  const n=f_name.value.trim(), ph=f_phone.value.trim();
+  if(!n||!ph){ alert('Укажите имя и телефон — менеджер перезвонит.'); return; }
+  alert('Спасибо, '+n+'! Заявка на '+tot.textContent+' принята (демо). В боевой версии она уйдёт менеджеру и в CRM.');
+  cart=[]; f_name.value=''; f_phone.value=''; render(); closeCart();
+}
+calc(); render();
+</script>
+</body>
+</html>
