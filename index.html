@@ -3,132 +3,259 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ЛесТорг — пиломатериалы от производителя</title>
-<meta name="description" content="Пиломатериалы от производителя: доска обрезная, брус, вагонка. Расчёт объёма и цены по м³, распил в размер, доставка.">
+<title>ЛесТорг — пиломатериалы от производителя · доска, брус, вагонка</title>
+<meta name="description" content="Пиломатериалы с собственной пилорамы: доска обрезная и сухая, брус, вагонка. Калькулятор объёма и сметы, распил в размер, доставка манипулятором. Работаем с юрлицами и НДС.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --wood:#8a5a2b; --wood-d:#6b4420; --cream:#faf6ef; --ink:#2b2320;
-    --line:#e7ddce; --green:#3c7a4a; --card:#fff; --muted:#7a6f63;
-    --shadow:0 6px 24px rgba(60,40,20,.08);
+    --ink:#151210; --ink2:#2a2420; --cream:#f6f1e8; --sand:#ece0cd; --line:#e3d8c5;
+    --amber:#c8863c; --amber-d:#a86b28; --forest:#2e5d3b; --forest-d:#244b30;
+    --muted:#8a7d6d; --card:#fffdf9; --shadow:0 10px 40px rgba(40,28,14,.10); --shadow-lg:0 24px 70px rgba(40,28,14,.18);
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--cream);line-height:1.5}
+  html{scroll-behavior:smooth}
+  body{font-family:'Manrope',-apple-system,BlinkMacSystemFont,sans-serif;color:var(--ink);background:var(--cream);line-height:1.55;overflow-x:hidden}
   a{color:inherit;text-decoration:none}
-  .wrap{max-width:1140px;margin:0 auto;padding:0 20px}
-  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--wood);color:#fff;border:0;padding:12px 20px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:.15s}
-  .btn:hover{background:var(--wood-d)}
-  .btn.ghost{background:transparent;color:var(--wood);border:1.5px solid var(--wood)}
-  .btn.ghost:hover{background:var(--wood);color:#fff}
+  h1,h2,h3,.disp{font-family:'Unbounded',sans-serif;letter-spacing:-.02em;line-height:1.05}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+  .btn{display:inline-flex;align-items:center;gap:9px;background:var(--amber);color:#fff;border:0;padding:14px 26px;border-radius:12px;font-family:'Manrope';font-size:15px;font-weight:700;cursor:pointer;transition:transform .18s,box-shadow .18s,background .18s;box-shadow:0 8px 22px rgba(200,134,60,.28)}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(200,134,60,.4);background:var(--amber-d)}
+  .btn.dark{background:var(--ink);box-shadow:0 8px 22px rgba(20,17,14,.28)}
+  .btn.dark:hover{background:var(--ink2)}
+  .btn.ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.5);box-shadow:none}
+  .btn.ghost:hover{background:#fff;color:var(--ink);border-color:#fff}
+  .btn.gg{background:transparent;color:var(--ink);border:1.5px solid var(--line);box-shadow:none}
+  .btn.gg:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--forest);background:rgba(46,93,59,.09);padding:7px 14px;border-radius:30px;margin-bottom:18px}
+  .eyebrow.on-dark{color:#a9d8b6;background:rgba(169,216,182,.12)}
+  /* scroll progress */
+  #prog{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--amber),var(--forest));z-index:100;transition:width .1s}
+  /* reveal */
+  .rv{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+  .rv.in{opacity:1;transform:none}
+  .rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}.rv.d4{transition-delay:.32s}
   /* header */
-  header{position:sticky;top:0;background:rgba(250,246,239,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:40}
-  .bar{display:flex;align-items:center;gap:24px;height:66px}
-  .logo{font-size:21px;font-weight:800;letter-spacing:-.5px;display:flex;align-items:center;gap:9px}
-  .logo .mk{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--wood),var(--wood-d));display:grid;place-items:center;color:#fff;font-size:16px}
-  nav.menu{display:flex;gap:22px;margin-left:12px;font-size:15px;color:#4b4038}
-  nav.menu a:hover{color:var(--wood)}
-  .bar .right{margin-left:auto;display:flex;align-items:center;gap:16px}
-  .phone{font-weight:700;font-size:16px;white-space:nowrap}
-  .phone small{display:block;font-weight:400;font-size:11px;color:var(--muted)}
-  .cartbtn{position:relative;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:600;font-size:14px}
-  .cartbtn .cnt{position:absolute;top:-8px;right:-8px;background:var(--green);color:#fff;font-size:11px;min-width:20px;height:20px;border-radius:10px;display:grid;place-items:center;padding:0 5px}
-  /* hero */
-  .hero{padding:56px 0 40px;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
-  .hero h1{font-size:44px;line-height:1.08;letter-spacing:-1px;margin-bottom:16px}
-  .hero p.sub{font-size:18px;color:#5a4f45;margin-bottom:24px;max-width:520px}
-  .hero .cta{display:flex;gap:12px;flex-wrap:wrap}
-  .trust{display:flex;gap:26px;margin-top:30px;flex-wrap:wrap}
-  .trust div{font-size:14px;color:#4b4038}
-  .trust b{display:block;font-size:22px;color:var(--wood-d)}
-  .heroart{background:linear-gradient(160deg,#b07d43,#7c4f24);border-radius:20px;min-height:320px;box-shadow:var(--shadow);position:relative;overflow:hidden}
-  .heroart .planks{position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.06) 0 26px,rgba(0,0,0,.06) 26px 52px)}
-  .heroart .tag{position:absolute;left:22px;bottom:22px;background:rgba(255,255,255,.95);border-radius:12px;padding:14px 18px;font-size:14px;box-shadow:var(--shadow)}
-  .heroart .tag b{color:var(--wood-d)}
+  header{position:fixed;top:0;left:0;right:0;z-index:80;transition:.3s}
+  header .bar{display:flex;align-items:center;gap:26px;height:76px;transition:.3s}
+  header.scr{background:rgba(246,241,232,.9);backdrop-filter:blur(12px);box-shadow:0 2px 20px rgba(40,28,14,.07)}
+  header.scr .bar{height:64px}
+  .logo{font-family:'Unbounded';font-weight:700;font-size:21px;display:flex;align-items:center;gap:10px;color:#fff;transition:.3s}
+  header.scr .logo{color:var(--ink)}
+  .logo .mk{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--amber),var(--amber-d));display:grid;place-items:center;font-size:18px;box-shadow:0 6px 16px rgba(200,134,60,.4)}
+  nav.menu{display:flex;gap:24px;margin-left:8px;font-size:14.5px;font-weight:600;color:rgba(255,255,255,.9)}
+  header.scr nav.menu{color:var(--ink2)}
+  nav.menu a{position:relative;padding:4px 0}
+  nav.menu a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--amber);transition:.25s}
+  nav.menu a:hover::after{width:100%}
+  .bar .right{margin-left:auto;display:flex;align-items:center;gap:18px}
+  .phone{font-weight:800;font-size:16px;white-space:nowrap;color:#fff;transition:.3s}
+  header.scr .phone{color:var(--ink)}
+  .phone small{display:block;font-weight:500;font-size:10.5px;opacity:.7}
+  .cartbtn{position:relative;background:var(--amber);color:#fff;border:0;border-radius:11px;padding:11px 18px;cursor:pointer;font-weight:700;font-size:14px;font-family:'Manrope';box-shadow:0 8px 20px rgba(200,134,60,.35)}
+  .cartbtn .cnt{position:absolute;top:-7px;right:-7px;background:var(--forest);color:#fff;font-size:11px;min-width:20px;height:20px;border-radius:10px;display:grid;place-items:center;padding:0 5px;font-weight:700}
+  /* HERO */
+  .hero{position:relative;min-height:100vh;display:flex;align-items:center;color:#fff;overflow:hidden}
+  .hero .bg{position:absolute;inset:-8% 0;background:url('img/hero.jpg') center/cover;will-change:transform;z-index:-2}
+  .hero .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,rgba(15,12,10,.92) 0%,rgba(15,12,10,.72) 42%,rgba(15,12,10,.35) 100%)}
+  .hero .glow{position:absolute;bottom:-30%;right:-10%;width:60vw;height:60vw;background:radial-gradient(circle,rgba(200,134,60,.28),transparent 65%);z-index:-1}
+  .hero .inner{padding:120px 0 90px;max-width:720px}
+  .hero h1{font-size:clamp(38px,6vw,74px);font-weight:800;margin-bottom:22px}
+  .hero h1 .hl{color:var(--amber);position:relative}
+  .hero p.sub{font-size:clamp(16px,2vw,20px);color:rgba(255,255,255,.82);margin-bottom:32px;max-width:560px;font-weight:500}
+  .hero .cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:44px}
+  .cycle{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;font-weight:600;color:rgba(255,255,255,.9)}
+  .cycle span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);padding:8px 14px;border-radius:30px;backdrop-filter:blur(4px)}
+  .cycle .ar{opacity:.55}
+  .pricecard{position:absolute;right:max(22px,calc((100vw - 1180px)/2 + 22px));bottom:8vh;background:rgba(255,253,249,.97);color:var(--ink);border-radius:18px;padding:20px 22px;box-shadow:var(--shadow-lg);max-width:270px;z-index:2}
+  .pricecard .lbl{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--forest)}
+  .pricecard .nm{font-weight:800;font-size:16px;margin:6px 0 2px}
+  .pricecard .pr{font-family:'Unbounded';font-weight:700;font-size:26px;color:var(--amber-d)}
+  .pricecard .pr small{font-size:13px;color:var(--muted);font-weight:400;font-family:'Manrope'}
+  .pricecard .st{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--forest);font-weight:700;margin-top:8px}
+  .pricecard .dot{width:8px;height:8px;border-radius:50%;background:var(--forest);box-shadow:0 0 0 0 rgba(46,93,59,.5);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(46,93,59,.5)}70%{box-shadow:0 0 0 8px rgba(46,93,59,0)}100%{box-shadow:0 0 0 0 rgba(46,93,59,0)}}
+  .scrollcue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.6);font-size:12px;font-weight:600;letter-spacing:.15em;text-align:center;z-index:2}
+  .scrollcue .m{width:22px;height:36px;border:2px solid rgba(255,255,255,.4);border-radius:12px;margin:0 auto 8px;position:relative}
+  .scrollcue .m::after{content:"";position:absolute;top:6px;left:50%;transform:translateX(-50%);width:4px;height:7px;border-radius:2px;background:#fff;animation:sc 1.6s infinite}
+  @keyframes sc{0%{opacity:0;top:6px}40%{opacity:1}80%{opacity:0;top:16px}100%{opacity:0}}
+  /* USP strip */
+  .usp{background:var(--ink);color:#fff;padding:26px 0}
+  .usp .row{display:grid;grid-template-columns:repeat(5,1fr);gap:22px}
+  .usp .u{display:flex;gap:12px;align-items:flex-start}
+  .usp .u .i{font-size:22px;line-height:1}
+  .usp .u b{display:block;font-size:14px;font-weight:700}
+  .usp .u span{font-size:12.5px;color:rgba(255,255,255,.6)}
   /* sections */
-  section{padding:46px 0}
-  .h2{font-size:30px;letter-spacing:-.5px;margin-bottom:6px}
-  .lead{color:var(--muted);margin-bottom:26px;font-size:16px}
+  section.sec{padding:96px 0}
+  .head{max-width:640px;margin-bottom:44px}
+  .head h2{font-size:clamp(28px,4vw,42px);font-weight:700;margin-bottom:14px}
+  .head p{font-size:17px;color:var(--muted)}
+  .head.center{margin:0 auto 48px;text-align:center}
   /* calculator */
-  .calc{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:26px;display:grid;grid-template-columns:1fr 300px;gap:26px}
-  .calc h3{font-size:20px;margin-bottom:4px}
-  .calc .fields{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
-  .field{display:flex;flex-direction:column;gap:6px}
+  .calc{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:34px;display:grid;grid-template-columns:1fr 340px;gap:34px;position:relative;overflow:hidden}
+  .calc::before{content:"";position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(46,93,59,.08),transparent 70%)}
+  .calc h3{font-size:21px;font-weight:700;margin-bottom:4px}
+  .calc .fields{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+  .field{display:flex;flex-direction:column;gap:7px}
   .field.full{grid-column:1/3}
-  label{font-size:13px;color:#5a4f45;font-weight:600}
-  select,input{font:inherit;padding:11px 12px;border:1.5px solid var(--line);border-radius:9px;background:#fff}
-  select:focus,input:focus{outline:none;border-color:var(--wood)}
-  .result{background:linear-gradient(160deg,#f6ecdd,#efe0c9);border-radius:14px;padding:22px;display:flex;flex-direction:column;justify-content:center}
-  .result .row{display:flex;justify-content:space-between;padding:7px 0;font-size:15px;color:#5a4f45}
-  .result .vol{font-size:15px}
-  .result .total{font-size:34px;font-weight:800;color:var(--wood-d);margin:8px 0 4px}
-  .result small{color:var(--muted);font-size:12px}
-  .result .btn{margin-top:16px;justify-content:center}
+  label{font-size:13px;color:var(--ink2);font-weight:700}
+  select,input{font-family:'Manrope';font-size:15px;padding:13px 14px;border:1.5px solid var(--line);border-radius:11px;background:#fff;transition:.15s;font-weight:500}
+  select:focus,input:focus{outline:none;border-color:var(--amber);box-shadow:0 0 0 4px rgba(200,134,60,.12)}
+  .result{background:linear-gradient(160deg,var(--ink),#241d17);color:#fff;border-radius:18px;padding:26px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+  .result::after{content:"";position:absolute;bottom:-40px;left:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(200,134,60,.3),transparent 70%)}
+  .result .rr{display:flex;justify-content:space-between;padding:8px 0;font-size:14px;color:rgba(255,255,255,.65);position:relative}
+  .result .rr b{color:#fff;font-weight:700}
+  .result .total{font-family:'Unbounded';font-size:40px;font-weight:700;margin:12px 0 2px;color:var(--amber);position:relative}
+  .result .fit{font-size:12.5px;color:#a9d8b6;margin-top:6px;position:relative;display:flex;align-items:center;gap:6px}
+  .result .btns{margin-top:20px;display:flex;flex-direction:column;gap:10px;position:relative}
+  .result .btn{justify-content:center;width:100%}
+  .result .wa{background:var(--forest);box-shadow:0 8px 20px rgba(46,93,59,.35)}
+  .result .wa:hover{background:var(--forest-d)}
+  /* B2B toggle */
+  .toolbar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:26px}
+  .seg{display:inline-flex;background:var(--sand);border-radius:12px;padding:4px}
+  .seg button{border:0;background:transparent;padding:9px 18px;border-radius:9px;font-family:'Manrope';font-weight:700;font-size:14px;color:var(--ink2);cursor:pointer;transition:.2s}
+  .seg button.on{background:#fff;box-shadow:0 3px 10px rgba(40,28,14,.12);color:var(--ink)}
+  .toolbar .note{font-size:13px;color:var(--muted)}
   /* catalog */
-  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-  .prod{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
-  .prod .ph{height:150px;background:linear-gradient(160deg,#c99a5f,#9a6a34);position:relative}
-  .prod .ph .planks{position:absolute;inset:0;background:repeating-linear-gradient(100deg,rgba(255,255,255,.07) 0 18px,rgba(0,0,0,.05) 18px 36px)}
-  .prod .ph .badge{position:absolute;top:12px;left:12px;background:rgba(255,255,255,.94);color:var(--wood-d);font-size:12px;font-weight:700;padding:5px 10px;border-radius:20px}
-  .prod .body{padding:16px 16px 18px;display:flex;flex-direction:column;flex:1}
-  .prod h4{font-size:17px;margin-bottom:4px}
-  .prod .desc{font-size:13px;color:var(--muted);margin-bottom:12px;flex:1}
-  .prod .price{font-size:20px;font-weight:800;color:var(--wood-d)}
-  .prod .price small{font-size:13px;font-weight:500;color:var(--muted)}
-  .prod .add{margin-top:12px}
-  .prod .add .btn{width:100%;justify-content:center}
-  /* features */
-  .feats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-  .feat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
-  .feat .ic{font-size:24px;margin-bottom:10px}
-  .feat h4{font-size:16px;margin-bottom:5px}
-  .feat p{font-size:13px;color:var(--muted)}
-  /* cta band */
-  .band{background:linear-gradient(135deg,var(--wood),var(--wood-d));color:#fff;border-radius:20px;padding:38px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
-  .band h3{font-size:26px;margin-bottom:6px}
-  .band p{opacity:.9}
-  .band .btn{background:#fff;color:var(--wood-d)}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .prod{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .25s,box-shadow .25s}
+  .prod:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
+  .prod .ph{height:190px;position:relative;overflow:hidden}
+  .prod .ph img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+  .prod:hover .ph img{transform:scale(1.07)}
+  .prod .badges{position:absolute;top:12px;left:12px;display:flex;gap:6px;flex-wrap:wrap}
+  .chip{background:rgba(255,253,249,.94);color:var(--ink);font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:20px;backdrop-filter:blur(4px)}
+  .chip.g{background:var(--forest);color:#fff}
+  .chip.a{background:var(--amber);color:#fff}
+  .prod .body{padding:18px 18px 20px;display:flex;flex-direction:column;flex:1}
+  .prod h4{font-family:'Unbounded';font-size:17px;font-weight:600;margin-bottom:8px}
+  .specs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .specs span{font-size:11.5px;color:var(--ink2);background:var(--sand);padding:4px 9px;border-radius:7px;font-weight:600}
+  .prod .foot{margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+  .prod .price{font-family:'Unbounded';font-size:22px;font-weight:700;color:var(--amber-d)}
+  .prod .price small{font-size:12.5px;font-weight:500;color:var(--muted);font-family:'Manrope'}
+  .prod .price .nds{display:block;font-size:11px;color:var(--forest);font-weight:700;font-family:'Manrope'}
+  .prod .add{background:var(--ink);color:#fff;border:0;border-radius:11px;padding:11px 15px;font-family:'Manrope';font-weight:700;font-size:13.5px;cursor:pointer;white-space:nowrap;transition:.18s}
+  .prod .add:hover{background:var(--amber)}
+  /* stats band */
+  .stats{position:relative;color:#fff;padding:90px 0;overflow:hidden}
+  .stats .bg{position:absolute;inset:0;background:url('img/yard.jpg') center/cover;z-index:-2}
+  .stats .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(15,12,10,.9),rgba(15,12,10,.82))}
+  .stats .row{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
+  .stats .s .n{font-family:'Unbounded';font-size:clamp(34px,5vw,52px);font-weight:700;color:var(--amber)}
+  .stats .s .l{font-size:14.5px;color:rgba(255,255,255,.75);margin-top:4px;font-weight:500}
+  /* compare */
+  .cmp{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:900px;margin:0 auto}
+  .cmp .col{border-radius:20px;padding:30px;border:1px solid var(--line)}
+  .cmp .them{background:#fff}
+  .cmp .us{background:linear-gradient(165deg,var(--forest),var(--forest-d));color:#fff;border:0;box-shadow:var(--shadow-lg)}
+  .cmp h4{font-family:'Unbounded';font-size:19px;margin-bottom:18px;font-weight:600}
+  .cmp ul{list-style:none;display:flex;flex-direction:column;gap:13px}
+  .cmp li{font-size:14.5px;display:flex;gap:10px;align-items:flex-start}
+  .cmp .them li{color:var(--muted)}
+  .cmp .ic{flex-shrink:0;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;margin-top:1px}
+  .cmp .them .ic{background:#f0e5d3;color:#b0785c}
+  .cmp .us .ic{background:rgba(255,255,255,.2);color:#fff}
+  /* offer / lead */
+  .offer{position:relative;border-radius:28px;overflow:hidden;padding:56px;color:#fff}
+  .offer .bg{position:absolute;inset:0;background:url('img/trunks.jpg') center/cover;z-index:-2}
+  .offer .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(46,93,59,.96),rgba(36,75,48,.86) 60%,rgba(20,16,12,.7))}
+  .offer .in{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+  .offer h3{font-family:'Unbounded';font-size:clamp(24px,3.4vw,36px);font-weight:700;margin-bottom:14px}
+  .offer p{opacity:.9;font-size:16px;margin-bottom:20px}
+  .offer .pts{display:flex;flex-direction:column;gap:10px}
+  .offer .pts div{display:flex;gap:10px;align-items:center;font-weight:600;font-size:15px}
+  .offer .pts .c{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:13px}
+  .lead{background:rgba(255,253,249,.98);border-radius:20px;padding:28px;color:var(--ink)}
+  .lead h4{font-family:'Unbounded';font-size:19px;margin-bottom:6px;font-weight:600}
+  .lead p{color:var(--muted);font-size:14px;margin-bottom:16px}
+  .lead input{width:100%;margin-bottom:11px}
+  .lead .btn{width:100%;justify-content:center}
+  .lead small{display:block;text-align:center;color:var(--muted);font-size:11.5px;margin-top:10px}
+  /* reviews */
+  .revs{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .rev{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:var(--shadow)}
+  .rev .stars{color:var(--amber);font-size:15px;letter-spacing:2px;margin-bottom:12px}
+  .rev p{font-size:14.5px;color:var(--ink2);margin-bottom:18px}
+  .rev .who{display:flex;align-items:center;gap:12px}
+  .rev .av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--forest));display:grid;place-items:center;color:#fff;font-weight:800;font-family:'Unbounded';font-size:16px}
+  .rev .who b{display:block;font-size:14.5px}
+  .rev .who span{font-size:12.5px;color:var(--muted)}
+  /* faq */
+  .faq{max-width:820px;margin:0 auto}
+  .qa{border-bottom:1px solid var(--line)}
+  .qa .q{width:100%;text-align:left;background:none;border:0;padding:22px 0;font-family:'Manrope';font-weight:700;font-size:16.5px;color:var(--ink);cursor:pointer;display:flex;justify-content:space-between;gap:16px;align-items:center}
+  .qa .q .pl{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--sand);display:grid;place-items:center;font-size:17px;transition:.25s;color:var(--amber-d)}
+  .qa.open .q .pl{transform:rotate(45deg);background:var(--amber);color:#fff}
+  .qa .a{max-height:0;overflow:hidden;transition:max-height .3s ease;color:var(--muted);font-size:15px}
+  .qa .a div{padding:0 0 22px}
   /* footer */
-  footer{border-top:1px solid var(--line);padding:34px 0;margin-top:20px;color:#5a4f45;font-size:14px}
-  .fgrid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:24px}
-  .fgrid b{display:block;margin-bottom:8px;color:var(--ink)}
-  .fgrid a{display:block;padding:3px 0;color:#5a4f45}
-  .demo-note{background:#2b2320;color:#f0e6d6;text-align:center;font-size:13px;padding:9px}
+  footer{background:var(--ink);color:rgba(255,255,255,.72);padding:60px 0 30px;margin-top:40px}
+  .fgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr;gap:30px;margin-bottom:40px}
+  .fgrid b{display:block;margin-bottom:14px;color:#fff;font-size:15px;font-weight:700}
+  .fgrid a,.fgrid p{display:block;padding:4px 0;font-size:14px;color:rgba(255,255,255,.62)}
+  .fgrid a:hover{color:var(--amber)}
+  .fbot{border-top:1px solid rgba(255,255,255,.1);padding-top:24px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:rgba(255,255,255,.5)}
+  .demo-note{background:linear-gradient(90deg,var(--forest),var(--amber));color:#fff;text-align:center;font-size:13px;font-weight:600;padding:9px;position:relative;z-index:90}
+  /* mobile sticky cta */
+  .mcta{position:fixed;bottom:0;left:0;right:0;background:rgba(255,253,249,.97);backdrop-filter:blur(10px);box-shadow:0 -6px 24px rgba(40,28,14,.14);padding:12px 16px;display:none;gap:10px;z-index:75;border-top:1px solid var(--line)}
+  .mcta .btn{flex:1;justify-content:center}
   /* cart drawer */
-  .overlay{position:fixed;inset:0;background:rgba(30,20,10,.45);opacity:0;pointer-events:none;transition:.2s;z-index:60}
+  .overlay{position:fixed;inset:0;background:rgba(20,14,8,.5);opacity:0;pointer-events:none;transition:.25s;z-index:90}
   .overlay.open{opacity:1;pointer-events:auto}
-  .drawer{position:fixed;top:0;right:-420px;width:400px;max-width:92vw;height:100%;background:#fff;box-shadow:-10px 0 40px rgba(0,0,0,.2);transition:.25s;z-index:70;display:flex;flex-direction:column}
+  .drawer{position:fixed;top:0;right:-440px;width:420px;max-width:92vw;height:100%;background:var(--cream);box-shadow:-14px 0 50px rgba(0,0,0,.28);transition:right .3s cubic-bezier(.3,.8,.3,1);z-index:95;display:flex;flex-direction:column}
   .drawer.open{right:0}
-  .drawer .dh{padding:20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
-  .drawer .dh h3{font-size:19px}
-  .drawer .items{flex:1;overflow:auto;padding:12px 20px}
-  .ci{display:flex;justify-content:space-between;gap:10px;padding:14px 0;border-bottom:1px solid var(--line)}
-  .ci .t{font-size:14px}
-  .ci .t small{display:block;color:var(--muted);font-size:12px}
-  .ci .rm{color:#b34b3a;cursor:pointer;font-size:13px;background:none;border:0}
-  .empty{color:var(--muted);text-align:center;padding:40px 0;font-size:14px}
-  .drawer .df{padding:20px;border-top:1px solid var(--line)}
-  .drawer .df .tot{display:flex;justify-content:space-between;font-size:18px;font-weight:800;margin-bottom:14px}
-  .drawer .df input{width:100%;margin-bottom:10px}
+  .drawer .dh{padding:22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;background:#fff}
+  .drawer .dh h3{font-family:'Unbounded';font-size:19px;font-weight:600}
+  .drawer .items{flex:1;overflow:auto;padding:14px 22px}
+  .ci{display:flex;justify-content:space-between;gap:12px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .ci .t{font-size:14.5px;font-weight:600}
+  .ci .t small{display:block;color:var(--muted);font-size:12px;font-weight:400;margin-top:2px}
+  .ci .rt{text-align:right;white-space:nowrap}
+  .ci .rt b{font-family:'Unbounded';font-size:15px;color:var(--amber-d)}
+  .ci .rm{color:#b5503c;cursor:pointer;font-size:12.5px;background:none;border:0;margin-top:4px}
+  .empty{color:var(--muted);text-align:center;padding:50px 20px;font-size:14.5px}
+  .drawer .df{padding:22px;border-top:1px solid var(--line);background:#fff}
+  .drawer .df .tot{display:flex;justify-content:space-between;font-family:'Unbounded';font-size:20px;font-weight:700;margin-bottom:16px}
+  .drawer .df input{width:100%;margin-bottom:11px}
   .drawer .df .btn{width:100%;justify-content:center}
-  .x{background:none;border:0;font-size:24px;cursor:pointer;color:var(--muted);line-height:1}
-  @media(max-width:900px){
-    .hero{grid-template-columns:1fr;padding-top:34px}.hero h1{font-size:34px}
+  .x{background:none;border:0;font-size:26px;cursor:pointer;color:var(--muted);line-height:1}
+  @media(max-width:960px){
+    nav.menu,.phone small,.pricecard{display:none}
+    .hero .inner{padding-top:110px}
+    .usp .row{grid-template-columns:repeat(2,1fr);gap:18px}
     .calc{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}
-    .feats{grid-template-columns:repeat(2,1fr)}.fgrid{grid-template-columns:1fr}
-    nav.menu,.phone small{display:none}
+    .stats .row{grid-template-columns:repeat(2,1fr);gap:30px}
+    .cmp,.offer .in{grid-template-columns:1fr}.revs{grid-template-columns:1fr}
+    .fgrid{grid-template-columns:1fr 1fr}
+    .offer{padding:36px 26px}
+    .mcta{display:flex}
+    body{padding-bottom:70px}
   }
-  @media(max-width:560px){.grid{grid-template-columns:1fr}.feats{grid-template-columns:1fr}.calc .fields{grid-template-columns:1fr}.field.full{grid-column:1}.hero h1{font-size:29px}}
+  @media(max-width:560px){
+    .grid{grid-template-columns:1fr}.usp .row{grid-template-columns:1fr}.stats .row{grid-template-columns:1fr}
+    .calc .fields{grid-template-columns:1fr}.field.full{grid-column:1}.fgrid{grid-template-columns:1fr}
+    section.sec{padding:64px 0}.calc{padding:24px}
+  }
+  @media(prefers-reduced-motion:reduce){.rv{transition:none;opacity:1;transform:none}.hero .bg{transform:none!important}}
 </style>
 </head>
 <body>
-<div class="demo-note">Демо-прототип интернет-магазина пиломатериалов · собран для отклика на задачу</div>
-<header>
+<div id="prog"></div>
+<div class="demo-note">Демонстрационный прототип интернет-магазина пиломатериалов · собран под задачу на бирже</div>
+
+<header id="hdr">
   <div class="wrap bar">
     <div class="logo"><span class="mk">🪵</span>ЛесТорг</div>
     <nav class="menu">
-      <a href="#calc">Калькулятор</a>
       <a href="#catalog">Каталог</a>
-      <a href="#feats">Доставка</a>
-      <a href="#about">О производстве</a>
+      <a href="#calc">Калькулятор</a>
+      <a href="#prod">Производство</a>
+      <a href="#delivery">Доставка</a>
+      <a href="#faq">Вопросы</a>
     </nav>
     <div class="right">
       <div class="phone">+7 900 000-00-00<small>звонок по России бесплатный</small></div>
@@ -137,105 +264,228 @@
   </div>
 </header>
 
-<div class="wrap">
-  <!-- HERO -->
-  <section class="hero">
-    <div>
-      <h1>Пиломатериалы<br>от производителя</h1>
-      <p class="sub">Доска, брус, вагонка и погонаж с собственной пилорамы. Рассчитайте объём и цену за минуту, закажите распил в размер и доставку по региону.</p>
-      <div class="cta">
-        <a href="#calc" class="btn">Рассчитать стоимость</a>
-        <a href="#catalog" class="btn ghost">Смотреть каталог</a>
-      </div>
-      <div class="trust">
-        <div><b>12 лет</b>на рынке</div>
-        <div><b>ГОСТ</b>камерная сушка</div>
-        <div><b>от 1 м³</b>распил в размер</div>
-      </div>
+<!-- HERO -->
+<section class="hero">
+  <div class="bg" id="heroBg"></div>
+  <div class="glow"></div>
+  <div class="wrap inner">
+    <div class="eyebrow on-dark">🌲 своя пилорама · сушильные камеры · 12 лет</div>
+    <h1>Пиломатериалы<br><span class="hl">от производителя</span></h1>
+    <p class="sub">Доска, брус и вагонка прямо с нашей пилорамы. Рассчитайте объём и смету за минуту, закажите распил в размер и доставку манипулятором по региону.</p>
+    <div class="cta">
+      <a href="#calc" class="btn">Рассчитать смету →</a>
+      <a href="#catalog" class="btn ghost">Смотреть каталог</a>
     </div>
-    <div class="heroart"><div class="planks"></div>
-      <div class="tag">Сегодня со склада: <b>обрезная доска 25×150×6000</b> — 11 500 ₽/м³</div>
+    <div class="cycle">
+      <span>Свой лес</span><span class="ar">→</span><span>Распил</span><span class="ar">→</span>
+      <span>Сушильные камеры</span><span class="ar">→</span><span>Строжка</span><span class="ar">→</span><span>Доставка манипулятором</span>
     </div>
-  </section>
-</div>
+  </div>
+  <div class="pricecard">
+    <div class="lbl">Сегодня со склада</div>
+    <div class="nm">Доска обрезная 25×150×6000</div>
+    <div class="pr">6 900 ₽ <small>/ м³</small></div>
+    <div class="st"><span class="dot"></span> на складе 2 000+ м³</div>
+  </div>
+  <div class="scrollcue"><div class="m"></div>ЛИСТАЙТЕ</div>
+</section>
 
-<!-- CALCULATOR -->
-<div class="wrap">
-  <section id="calc">
-    <h2 class="h2">Калькулятор объёма и цены</h2>
-    <p class="lead">Пиломатериалы считаются в кубометрах — укажите размеры и количество, и мы сразу покажем объём и стоимость.</p>
-    <div class="calc">
-      <div>
-        <h3>Параметры материала</h3>
-        <div class="fields">
-          <div class="field full">
-            <label>Материал</label>
-            <select id="c_mat" onchange="calc()"></select>
-          </div>
-          <div class="field"><label>Толщина, мм</label><input id="c_t" type="number" value="25" min="1" oninput="calc()"></div>
-          <div class="field"><label>Ширина, мм</label><input id="c_w" type="number" value="150" min="1" oninput="calc()"></div>
-          <div class="field"><label>Длина, мм</label><input id="c_l" type="number" value="6000" min="1" oninput="calc()"></div>
-          <div class="field"><label>Количество, шт</label><input id="c_q" type="number" value="50" min="1" oninput="calc()"></div>
-        </div>
-      </div>
-      <div class="result">
-        <div class="row vol"><span>Объём одной штуки</span><b id="r_one">—</b></div>
-        <div class="row vol"><span>Общий объём</span><b id="r_vol">—</b></div>
-        <div class="row"><span>Цена за м³</span><b id="r_ppm">—</b></div>
-        <div class="total" id="r_total">—</div>
-        <small id="r_note">Ориентировочный расчёт по прайсу склада</small>
-        <button class="btn" onclick="addCalc()">Добавить в заявку</button>
-      </div>
-    </div>
-  </section>
+<!-- USP -->
+<div class="usp">
+  <div class="wrap row">
+    <div class="u rv"><div class="i">🏭</div><div><b>Своё производство</b><span>Пилорама без посредников</span></div></div>
+    <div class="u rv d1"><div class="i">🌡️</div><div><b>Камерная сушка</b><span>Влажность 8–12%, ГОСТ</span></div></div>
+    <div class="u rv d2"><div class="i">📐</div><div><b>Распил в размер</b><span>Под ваш проект</span></div></div>
+    <div class="u rv d3"><div class="i">🚚</div><div><b>Манипулятор</b><span>Доставка и разгрузка</span></div></div>
+    <div class="u rv d4"><div class="i">🧾</div><div><b>Юрлицам и НДС</b><span>Безнал, отсрочка</span></div></div>
+  </div>
 </div>
 
 <!-- CATALOG -->
-<div class="wrap">
-  <section id="catalog">
-    <h2 class="h2">Каталог</h2>
-    <p class="lead">Цены указаны за кубический метр. Нажмите «В заявку» — соберём и посчитаем всё вместе.</p>
-    <div class="grid" id="grid"></div>
-  </section>
-</div>
-
-<!-- FEATURES -->
-<div class="wrap">
-  <section id="feats">
-    <h2 class="h2">Как мы работаем</h2>
-    <p class="lead">От производства до вашего объекта — без посредников.</p>
-    <div class="feats">
-      <div class="feat"><div class="ic">🏭</div><h4>Своё производство</h4><p>Пилорама и сушильные камеры — контролируем качество и держим цену ниже рынка.</p></div>
-      <div class="feat"><div class="ic">📐</div><h4>Распил в размер</h4><p>Нарежем по вашим размерам под конкретный проект, без переплаты за лишнее.</p></div>
-      <div class="feat"><div class="ic">🚚</div><h4>Доставка</h4><p>Манипулятор и фуры по региону, разгрузка на объекте. Расчёт по адресу.</p></div>
-      <div class="feat"><div class="ic">📄</div><h4>Для юрлиц</h4><p>Работаем с НДС и без, отгрузка по договору, отсрочка для постоянных клиентов.</p></div>
+<section class="sec" id="catalog">
+  <div class="wrap">
+    <div class="head rv">
+      <div class="eyebrow">Каталог</div>
+      <h2>Пиломатериалы в наличии</h2>
+      <p>Цена указана за кубометр — переключите на цену за штуку или режим для юрлиц с НДС.</p>
     </div>
-  </section>
-</div>
-
-<!-- CTA BAND -->
-<div class="wrap">
-  <section id="about">
-    <div class="band">
-      <div>
-        <h3>Нужен объём под проект?</h3>
-        <p>Пришлите спецификацию — вернём смету с распилом и доставкой в течение дня.</p>
+    <div class="toolbar rv">
+      <div class="seg" id="unitSeg">
+        <button class="on" data-u="m3" onclick="setUnit('m3')">Цена за м³</button>
+        <button data-u="pc" onclick="setUnit('pc')">Цена за штуку</button>
       </div>
-      <button class="btn" onclick="openCart()">Оставить заявку</button>
+      <div class="seg" id="bSeg">
+        <button class="on" data-b="fiz" onclick="setB2B('fiz')">Физлицо</button>
+        <button data-b="ur" onclick="setB2B('ur')">Юрлицо · НДС</button>
+      </div>
+      <span class="note" id="b2bNote">Цены розничные, наличными или картой.</span>
     </div>
-  </section>
-</div>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<!-- CALCULATOR -->
+<section class="sec" id="calc" style="padding-top:0">
+  <div class="wrap">
+    <div class="head rv">
+      <div class="eyebrow">Калькулятор</div>
+      <h2>Объём и смета за минуту</h2>
+      <p>Пиломатериалы считаются в кубометрах. Укажите размеры и количество — покажем объём, вес и стоимость, и уместится ли заказ в один манипулятор.</p>
+    </div>
+    <div class="calc rv">
+      <div>
+        <h3>Параметры материала</h3>
+        <div class="fields">
+          <div class="field full"><label>Материал</label><select id="c_mat" onchange="calc()"></select></div>
+          <div class="field"><label>Толщина, мм</label><input id="c_t" type="number" value="25" min="1" oninput="calc()"></div>
+          <div class="field"><label>Ширина, мм</label><input id="c_w" type="number" value="150" min="1" oninput="calc()"></div>
+          <div class="field"><label>Длина, мм</label><input id="c_l" type="number" value="6000" min="1" oninput="calc()"></div>
+          <div class="field"><label>Количество, шт</label><input id="c_q" type="number" value="80" min="1" oninput="calc()"></div>
+        </div>
+      </div>
+      <div class="result">
+        <div class="rr"><span>Объём одной шт.</span><b id="r_one">—</b></div>
+        <div class="rr"><span>Общий объём</span><b id="r_vol">—</b></div>
+        <div class="rr"><span>Примерный вес</span><b id="r_wt">—</b></div>
+        <div class="rr"><span>Цена за м³</span><b id="r_ppm">—</b></div>
+        <div class="total" id="r_total">—</div>
+        <div class="fit" id="r_fit">🚚 уместится в один манипулятор</div>
+        <div class="btns">
+          <button class="btn" onclick="addCalc()">Добавить в заявку</button>
+          <button class="btn wa" onclick="openCart()">Смету в WhatsApp</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats" id="prod">
+  <div class="bg"></div>
+  <div class="wrap">
+    <div class="head center rv" style="color:#fff">
+      <div class="eyebrow on-dark" style="margin-left:auto;margin-right:auto">Производство</div>
+      <h2 style="color:#fff">Полный цикл — от делянки до объекта</h2>
+    </div>
+    <div class="row">
+      <div class="s rv"><div class="n" data-c="12">0</div><div class="l">лет на рынке</div></div>
+      <div class="s rv d1"><div class="n" data-c="26">0</div><div class="l">городов доставки</div></div>
+      <div class="s rv d2"><div class="n" data-c="2000" data-suf="+">0</div><div class="l">м³ на складе</div></div>
+      <div class="s rv d3"><div class="n" data-c="14">0</div><div class="l">единиц техники</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARE -->
+<section class="sec">
+  <div class="wrap">
+    <div class="head center rv">
+      <div class="eyebrow" style="margin:0 auto 18px">Почему мы</div>
+      <h2>Производитель против обычной базы</h2>
+    </div>
+    <div class="cmp">
+      <div class="col them rv">
+        <h4>Обычная лесобаза</h4>
+        <ul>
+          <li><span class="ic">✕</span> перекуп: цена выше, качество — как привезли</li>
+          <li><span class="ic">✕</span> влажность «на глаз», ведёт и трещит</li>
+          <li><span class="ic">✕</span> распил — «берите как есть»</li>
+          <li><span class="ic">✕</span> с юрлицами и НДС — «это не к нам»</li>
+          <li><span class="ic">✕</span> смету считают неделю</li>
+        </ul>
+      </div>
+      <div class="col us rv d1">
+        <h4>ЛесТорг — производитель</h4>
+        <ul>
+          <li><span class="ic">✓</span> свой лес и пилорама — цена ниже, качество под контролем</li>
+          <li><span class="ic">✓</span> камерная сушка 8–12%, стабильная геометрия</li>
+          <li><span class="ic">✓</span> распил в размер под ваш проект</li>
+          <li><span class="ic">✓</span> НДС, безнал, отсрочка, закрывающие документы</li>
+          <li><span class="ic">✓</span> смета с распилом и доставкой за 15 минут</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OFFER / LEAD -->
+<section class="sec" id="delivery" style="padding-top:0">
+  <div class="wrap">
+    <div class="offer rv">
+      <div class="bg"></div>
+      <div class="in">
+        <div>
+          <div class="eyebrow on-dark">Смета за 15 минут</div>
+          <h3>Нужен объём под проект?</h3>
+          <p>Пришлите спецификацию или размеры — вернём смету с распилом, весом и доставкой манипулятором в течение 15 минут в рабочее время.</p>
+          <div class="pts">
+            <div><span class="c">✓</span> расчёт по вашим размерам и сорту</div>
+            <div><span class="c">✓</span> стоимость доставки по адресу</div>
+            <div><span class="c">✓</span> отсрочка для постоянных клиентов</div>
+          </div>
+        </div>
+        <div class="lead">
+          <h4>Получить смету</h4>
+          <p>Менеджер перезвонит в течение 15 минут.</p>
+          <input id="l_name" placeholder="Ваше имя">
+          <input id="l_phone" placeholder="Телефон">
+          <button class="btn" onclick="lead()">Запросить смету</button>
+          <small>Нажимая кнопку, вы соглашаетесь с обработкой данных</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="sec" style="padding-top:0">
+  <div class="wrap">
+    <div class="head center rv">
+      <div class="eyebrow" style="margin:0 auto 18px">Отзывы</div>
+      <h2>Нам доверяют стройки и цеха</h2>
+    </div>
+    <div class="revs">
+      <div class="rev rv"><div class="stars">★★★★★</div><p>Брали брус и доску на каркасник. Сухой, ровный, распилили точно по спецификации. Манипулятор разгрузил прямо на участке.</p><div class="who"><div class="av">И</div><div><b>Игорь М.</b><span>прораб · 14 марта 2026</span></div></div></div>
+      <div class="rev rv d1"><div class="stars">★★★★★</div><p>Работаем как ООО, нужен был НДС и отсрочка — без проблем. Смету прислали за 15 минут, цена ниже нашей прежней базы.</p><div class="who"><div class="av">С</div><div><b>Светлана К.</b><span>снабжение · 2 марта 2026</span></div></div></div>
+      <div class="rev rv d2"><div class="stars">★★★★★</div><p>Заказывал вагонку и имитацию бруса на баню. Сорт как обещали, упаковка целая. Калькулятор на сайте — реально удобно.</p><div class="who"><div class="av">Д</div><div><b>Дмитрий Р.</b><span>частный клиент · 21 февраля 2026</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq" style="padding-top:0">
+  <div class="wrap">
+    <div class="head center rv">
+      <div class="eyebrow" style="margin:0 auto 18px">Вопросы</div>
+      <h2>Частые вопросы</h2>
+    </div>
+    <div class="faq" id="faqbox"></div>
+  </div>
+</section>
 
 <footer>
-  <div class="wrap fgrid">
-    <div>
-      <div class="logo" style="margin-bottom:10px"><span class="mk">🪵</span>ЛесТорг</div>
-      <p style="color:var(--muted);max-width:320px">Производство и продажа пиломатериалов. Демонстрационный прототип магазина, подготовленный к отклику на бирже.</p>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <div class="logo" style="color:#fff;margin-bottom:14px"><span class="mk">🪵</span>ЛесТорг</div>
+        <p style="max-width:300px">Производство и продажа пиломатериалов с собственной пилорамы. Демонстрационный прототип, подготовленный к отклику на бирже.</p>
+      </div>
+      <div><b>Каталог</b><a href="#catalog">Доска обрезная</a><a href="#catalog">Брус</a><a href="#catalog">Вагонка</a><a href="#catalog">Имитация бруса</a><a href="#catalog">Доска пола</a></div>
+      <div><b>Клиентам</b><a href="#calc">Калькулятор сметы</a><a href="#delivery">Доставка и оплата</a><a href="#delivery">Юрлицам и НДС</a><a href="#faq">Вопросы</a></div>
+      <div><b>Контакты</b><a href="tel:+79000000000">+7 900 000-00-00</a><a href="#">zakaz@lestorg.demo</a><p>Пн–Сб, 8:00–18:00</p><p>Демо-адрес склада, 1</p></div>
     </div>
-    <div><b>Каталог</b><a href="#catalog">Доска обрезная</a><a href="#catalog">Брус</a><a href="#catalog">Вагонка</a><a href="#catalog">Погонаж</a></div>
-    <div><b>Контакты</b><a href="#">+7 900 000-00-00</a><a href="#">zakaz@lestorg.demo</a><a href="#">Пн–Сб, 8:00–18:00</a></div>
+    <div class="fbot">
+      <span>© 2026 ЛесТорг (демо). ИП Демонстрационный · ИНН 0000000000</span>
+      <span>Прототип для отклика · дизайн и разработка</span>
+    </div>
   </div>
 </footer>
+
+<!-- mobile sticky cta -->
+<div class="mcta">
+  <a href="#calc" class="btn gg" style="border-color:var(--line)">Смета</a>
+  <button class="btn" onclick="openCart()">Оставить заявку</button>
+</div>
 
 <!-- CART -->
 <div class="overlay" id="ov" onclick="closeCart()"></div>
@@ -251,55 +501,95 @@
 </div>
 
 <script>
+// ---- data ----
 const PRODUCTS = [
-  {id:'doska', name:'Доска обрезная', badge:'Хит', desc:'Ель/сосна, естественной влажности. 25–50 мм.', ppm:11500},
-  {id:'brus', name:'Брус профилированный', badge:'Сушка', desc:'Профилированный брус камерной сушки для стен.', ppm:16800},
-  {id:'brusok', name:'Брусок строганый', badge:'', desc:'Для обрешётки, стропил и каркаса.', ppm:14200},
-  {id:'vagonka', name:'Вагонка «Штиль»', badge:'Сорт AB', desc:'Профиль штиль, для внутренней отделки.', ppm:19900},
-  {id:'imitaciya', name:'Имитация бруса', badge:'', desc:'Фасад и интерьер под массивный брус.', ppm:21500},
-  {id:'polovaya', name:'Доска пола шпунтованная', badge:'', desc:'Шпунт, камерная сушка, сорт A.', ppm:24800},
+  {id:'doska', name:'Доска обрезная', cat:'m3', img:'img/planks1.jpg', badge:{t:'Хит',c:'a'}, poroda:'Ель/сосна', sort:'1–2 сорт', extra:'Естеств. влажность', gost:true, size:[25,150,6000], ppm:6900, dens:520},
+  {id:'suhaya', name:'Доска сухая строганная', cat:'m3', img:'img/planks2.jpg', badge:{t:'Сушка',c:'g'}, poroda:'Сосна', sort:'Сорт АВ', extra:'Камерная 8–12%', gost:true, size:[50,150,6000], ppm:21900, dens:480},
+  {id:'brus', name:'Брус обрезной', cat:'m3', img:'img/boards.jpg', badge:{t:'ГОСТ',c:''}, poroda:'Ель/сосна', sort:'1 сорт', extra:'Естеств. влажность', gost:true, size:[100,100,6000], ppm:7400, dens:520},
+  {id:'brusok', name:'Брусок строганый', cat:'m3', img:'img/planks1.jpg', badge:null, poroda:'Сосна', sort:'Сорт А', extra:'Сухой', gost:false, size:[50,50,3000], ppm:14200, dens:470},
+  {id:'polovaya', name:'Доска пола шпунтованная', cat:'m3', img:'img/planks2.jpg', badge:{t:'Сорт А',c:''}, poroda:'Сосна', sort:'Сорт А', extra:'Камерная сушка, шпунт', gost:true, size:[36,135,6000], ppm:24800, dens:490},
+  {id:'vagonka', name:'Вагонка «Штиль»', cat:'m2', img:'img/planks2.jpg', badge:{t:'от 450 ₽/м²',c:'g'}, poroda:'Сосна', sort:'Сорт АВ', extra:'Профиль штиль', gost:true, ppm2:450},
 ];
-let cart = [];
+const FAQ = [
+  ['Какая влажность у вашего пиломатериала?','Есть материал естественной влажности и камерной сушки (8–12%). Сухой не ведёт и не трещит — его берут под чистовые работы и мебель. Влажность указана в карточке каждой позиции.'],
+  ['Работаете ли с юрлицами и НДС?','Да. Отгружаем по договору, работаем с НДС и без, безналичный расчёт, полный пакет закрывающих документов, для постоянных клиентов — отсрочка платежа.'],
+  ['Можно ли распилить в размер?','Да, распустим и нарежем под ваши размеры и проект — не придётся переплачивать за лишнее и возить обрезки.'],
+  ['Какой минимальный заказ и сколько ждать доставку?','Минимального порога по объёму нет. По складским позициям доставка манипулятором обычно на следующий день, точный срок и стоимость считаем по адресу.'],
+];
 
-// fill material select + catalog
-const sel = document.getElementById('c_mat');
-PRODUCTS.forEach(p=>{ const o=document.createElement('option'); o.value=p.id; o.textContent=p.name+' — '+p.ppm.toLocaleString('ru')+' ₽/м³'; sel.appendChild(o); });
-const grid = document.getElementById('grid');
-PRODUCTS.forEach(p=>{
-  const el=document.createElement('div'); el.className='prod';
-  el.innerHTML=`<div class="ph"><div class="planks"></div>${p.badge?`<span class="badge">${p.badge}</span>`:''}</div>
-  <div class="body"><h4>${p.name}</h4><div class="desc">${p.desc}</div>
-  <div class="price">${p.ppm.toLocaleString('ru')} ₽ <small>/ м³</small></div>
-  <div class="add"><button class="btn" onclick="addProduct('${p.id}')">В заявку</button></div></div>`;
-  grid.appendChild(el);
-});
-
+// ---- state ----
+let unit='m3', b2b='fiz', cart=[];
+const NDS=1.20;
+function volOf(s){ return (s[0]/1000)*(s[1]/1000)*(s[2]/1000); }
+function priceM3(p){ return b2b==='ur' ? Math.round(p.ppm*NDS) : p.ppm; }
 function fmt(n){ return Math.round(n).toLocaleString('ru')+' ₽'; }
-function volOne(){ const t=+c_t.value, w=+c_w.value, l=+c_l.value; return (t/1000)*(w/1000)*(l/1000); }
+
+// ---- build catalog + material select ----
+const grid=document.getElementById('grid'), sel=document.getElementById('c_mat');
+PRODUCTS.filter(p=>p.cat==='m3').forEach(p=>{ const o=document.createElement('option'); o.value=p.id; o.textContent=p.name; sel.appendChild(o); });
+
+function renderCatalog(){
+  grid.innerHTML='';
+  PRODUCTS.forEach(p=>{
+    const el=document.createElement('div'); el.className='prod rv';
+    let priceHtml;
+    if(p.cat==='m2'){
+      const pr = b2b==='ur'? Math.round(p.ppm2*NDS):p.ppm2;
+      priceHtml=`<div class="price">${pr.toLocaleString('ru')} ₽ <small>/ м²</small>${b2b==='ur'?'<span class="nds">с НДС</span>':''}</div>`;
+    } else {
+      const pm=priceM3(p), pc=Math.round(pm*volOf(p.size));
+      const show = unit==='m3' ? `${pm.toLocaleString('ru')} ₽ <small>/ м³</small>` : `${pc.toLocaleString('ru')} ₽ <small>/ шт</small>`;
+      priceHtml=`<div class="price">${show}${b2b==='ur'?'<span class="nds">с НДС</span>':''}</div>`;
+    }
+    const size = p.size? `<span>${p.size[0]}×${p.size[1]}×${p.size[2]} мм</span>`:'';
+    el.innerHTML=`
+      <div class="ph"><img src="${p.img}" alt="${p.name}" loading="lazy">
+        <div class="badges">${p.badge?`<span class="chip ${p.badge.c}">${p.badge.t}</span>`:''}${p.gost?'<span class="chip">ГОСТ</span>':''}</div>
+      </div>
+      <div class="body">
+        <h4>${p.name}</h4>
+        <div class="specs"><span>${p.poroda}</span><span>${p.sort}</span><span>${p.extra}</span>${size}</div>
+        <div class="foot">${priceHtml}<button class="add" onclick="addProduct('${p.id}')">В заявку</button></div>
+      </div>`;
+    grid.appendChild(el);
+  });
+  observeReveal();
+}
+function setUnit(u){ unit=u; document.querySelectorAll('#unitSeg button').forEach(b=>b.classList.toggle('on',b.dataset.u===u)); renderCatalog(); }
+function setB2B(b){ b2b=b; document.querySelectorAll('#bSeg button').forEach(x=>x.classList.toggle('on',x.dataset.b===b));
+  document.getElementById('b2bNote').textContent = b==='ur' ? 'Цены с НДС 20%, безнал, отсрочка, закрывающие документы.' : 'Цены розничные, наличными или картой.';
+  renderCatalog(); calc(); }
+
+// ---- calculator ----
+function animateNum(el,to){ const from=parseFloat(el.dataset.v||'0')||0; el.dataset.v=to; const st=performance.now(),d=450;
+  function tick(t){ const k=Math.min(1,(t-st)/d); const v=from+(to-from)*(1-Math.pow(1-k,3)); el.textContent=fmt(v); if(k<1)requestAnimationFrame(tick);} requestAnimationFrame(tick);}
 function calc(){
   const p=PRODUCTS.find(x=>x.id===sel.value); const q=+c_q.value||0;
-  const one=volOne(); const vol=one*q; const total=vol*p.ppm;
-  r_one.textContent=one.toFixed(4)+' м³';
-  r_vol.textContent=vol.toFixed(3)+' м³';
-  r_ppm.textContent=p.ppm.toLocaleString('ru')+' ₽';
-  r_total.textContent=fmt(total);
+  const one=(c_t.value/1000)*(c_w.value/1000)*(c_l.value/1000);
+  const vol=one*q; const pm=priceM3(p); const total=vol*pm; const wt=vol*(p.dens||500);
+  r_one.textContent=one.toFixed(4)+' м³'; r_vol.textContent=vol.toFixed(3)+' м³';
+  r_wt.textContent=(wt>=1000?(wt/1000).toFixed(2)+' т':Math.round(wt)+' кг');
+  r_ppm.textContent=pm.toLocaleString('ru')+' ₽'+(b2b==='ur'?' с НДС':'');
+  animateNum(r_total,total);
+  const fits = vol<=6; r_fit.innerHTML = fits ? '🚚 уместится в один манипулятор' : '🚛 потребуется несколько рейсов манипулятора';
 }
 function addCalc(){
-  const p=PRODUCTS.find(x=>x.id===sel.value); const q=+c_q.value||0; const vol=volOne()*q;
-  cart.push({name:p.name, meta:`${c_t.value}×${c_w.value}×${c_l.value} мм · ${q} шт · ${vol.toFixed(3)} м³`, sum:vol*p.ppm});
+  const p=PRODUCTS.find(x=>x.id===sel.value); const q=+c_q.value||0;
+  const vol=(c_t.value/1000)*(c_w.value/1000)*(c_l.value/1000)*q;
+  cart.push({name:p.name, meta:`${c_t.value}×${c_w.value}×${c_l.value} мм · ${q} шт · ${vol.toFixed(3)} м³${b2b==='ur'?' · с НДС':''}`, sum:vol*priceM3(p)});
   render(); openCart();
 }
 function addProduct(id){
   const p=PRODUCTS.find(x=>x.id===id);
-  cart.push({name:p.name, meta:'1 м³ · уточним размеры при заказе', sum:p.ppm});
+  if(p.cat==='m2'){ const pr=b2b==='ur'?Math.round(p.ppm2*NDS):p.ppm2; cart.push({name:p.name, meta:`10 м² · уточним при заказе${b2b==='ur'?' · с НДС':''}`, sum:pr*10}); }
+  else { const pm=priceM3(p); cart.push({name:p.name, meta:`${p.size[0]}×${p.size[1]}×${p.size[2]} мм · 1 м³${b2b==='ur'?' · с НДС':''}`, sum:pm}); }
   render(); openCart();
 }
 function render(){
   cnt.textContent=cart.length;
   const box=document.getElementById('items');
-  if(!cart.length){ box.innerHTML='<div class="empty">Заявка пуста.<br>Добавьте позиции из каталога или калькулятора.</div>'; }
-  else{ box.innerHTML=cart.map((c,i)=>`<div class="ci"><div class="t">${c.name}<small>${c.meta}</small></div>
-    <div style="text-align:right"><b>${fmt(c.sum)}</b><br><button class="rm" onclick="rm(${i})">убрать</button></div></div>`).join(''); }
+  if(!cart.length){ box.innerHTML='<div class="empty">Заявка пуста.<br>Добавьте позиции из каталога или калькулятора — соберём и посчитаем всё вместе.</div>'; }
+  else box.innerHTML=cart.map((c,i)=>`<div class="ci"><div class="t">${c.name}<small>${c.meta}</small></div><div class="rt"><b>${fmt(c.sum)}</b><br><button class="rm" onclick="rm(${i})">убрать</button></div></div>`).join('');
   tot.textContent=fmt(cart.reduce((s,c)=>s+c.sum,0));
 }
 function rm(i){ cart.splice(i,1); render(); }
@@ -307,12 +597,47 @@ function openCart(){ ov.classList.add('open'); dw.classList.add('open'); }
 function closeCart(){ ov.classList.remove('open'); dw.classList.remove('open'); }
 function submitOrder(){
   if(!cart.length){ alert('Добавьте хотя бы одну позицию.'); return; }
-  const n=f_name.value.trim(), ph=f_phone.value.trim();
-  if(!n||!ph){ alert('Укажите имя и телефон — менеджер перезвонит.'); return; }
-  alert('Спасибо, '+n+'! Заявка на '+tot.textContent+' принята (демо). В боевой версии она уйдёт менеджеру и в CRM.');
+  if(!f_name.value.trim()||!f_phone.value.trim()){ alert('Укажите имя и телефон — менеджер перезвонит.'); return; }
+  alert('Спасибо, '+f_name.value.trim()+'! Заявка на '+tot.textContent+' принята (демо). В боевой версии она уходит менеджеру, в CRM и на WhatsApp.');
   cart=[]; f_name.value=''; f_phone.value=''; render(); closeCart();
 }
-calc(); render();
+function lead(){
+  if(!l_name.value.trim()||!l_phone.value.trim()){ alert('Заполните имя и телефон.'); return; }
+  alert('Спасибо, '+l_name.value.trim()+'! Смету пришлём в течение 15 минут (демо).'); l_name.value=''; l_phone.value='';
+}
+
+// ---- faq ----
+const faqbox=document.getElementById('faqbox');
+FAQ.forEach(([q,a],i)=>{ const d=document.createElement('div'); d.className='qa rv';
+  d.innerHTML=`<button class="q" onclick="toggleFaq(${i})"><span>${q}</span><span class="pl">+</span></button><div class="a"><div>${a}</div></div>`;
+  faqbox.appendChild(d);
+});
+function toggleFaq(i){ const items=document.querySelectorAll('.qa'); const el=items[i]; const a=el.querySelector('.a');
+  const open=el.classList.contains('open');
+  items.forEach(x=>{x.classList.remove('open');x.querySelector('.a').style.maxHeight=null;});
+  if(!open){ el.classList.add('open'); a.style.maxHeight=a.scrollHeight+'px'; }
+}
+
+// ---- reveal + counters + scroll fx ----
+let io;
+function observeReveal(){
+  if(!io) io=new IntersectionObserver((es)=>{es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in');
+    if(e.target.querySelector&&e.target.querySelector('.n[data-c]')) runCount(e.target); io.unobserve(e.target);} });},{threshold:.15});
+  document.querySelectorAll('.rv:not(.in)').forEach(el=>io.observe(el));
+}
+function runCount(scope){ const n=scope.querySelector('.n[data-c]'); if(!n||n.dataset.done)return; n.dataset.done=1;
+  const to=+n.dataset.c, suf=n.dataset.suf||'', st=performance.now(),d=1400;
+  function tick(t){ const k=Math.min(1,(t-st)/d); const v=Math.round(to*(1-Math.pow(1-k,3))); n.textContent=v.toLocaleString('ru')+suf; if(k<1)requestAnimationFrame(tick);} requestAnimationFrame(tick);
+}
+// header + progress + parallax
+const hdr=document.getElementById('hdr'), prog=document.getElementById('prog'), heroBg=document.getElementById('heroBg');
+window.addEventListener('scroll',()=>{ const y=window.scrollY;
+  hdr.classList.toggle('scr', y>40);
+  const h=document.documentElement.scrollHeight-innerHeight; prog.style.width=(y/h*100)+'%';
+  if(heroBg&&y<innerHeight) heroBg.style.transform='translateY('+(y*0.28)+'px)';
+},{passive:true});
+
+renderCatalog(); render(); calc(); observeReveal();
 </script>
 </body>
 </html>
